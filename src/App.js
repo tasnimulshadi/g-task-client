@@ -1,24 +1,59 @@
-import logo from './logo.svg';
-import './App.css';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import Main from './layout/Main/Main';
+import MyTasks from './pages/MyTasks/MyTasks';
+import AddTask from './pages/AddTask/AddTask';
+import CompletedTask from './pages/CompletedTask/CompletedTask';
+import EditTask from './pages/EditTask/EditTask';
+import Login from './pages/Login/Login';
+import Register from './pages/Register/Register';
+import PrivateRoute from './route/PrivateRoute';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Main></Main>,
+    children: [
+      {
+        path: '/',
+        element: <PrivateRoute>
+          <MyTasks></MyTasks>
+        </PrivateRoute>,
+      },
+      {
+        path: '/add',
+        element: <PrivateRoute>
+          <AddTask></AddTask>
+        </PrivateRoute>,
+      },
+      {
+        path: '/completed',
+        element: <PrivateRoute>
+          <CompletedTask></CompletedTask>
+        </PrivateRoute>,
+      },
+      {
+        path: '/edit/:id',
+        element: <PrivateRoute>
+          <EditTask></EditTask>
+        </PrivateRoute>,
+        loader: ({ params }) => fetch(`https://g-task-server.vercel.app/edit/${params.id}`)
+      },
+      {
+        path: '/login',
+        element: <Login></Login>,
+      },
+      {
+        path: '/register',
+        element: <Register></Register>,
+      },
+    ]
+  }
+])
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <RouterProvider router={router}>
+    </RouterProvider>
   );
 }
 
